@@ -1,13 +1,55 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    <a href="{% url 'base:create_room' %}">Create Room</a> 
-    <br />
-    {% for room in rooms %}
-        <a href="{% url 'base:update_room' room.id %}">Edit</a>
-        <span>@{{room.host.username}}</span>
-       <a href="{% url 'base:room' room.id %}"> <h4>{{room.id}}-- {{room.name}}</h4> </a>
-       <small>{{room.topic.name}}</small>
-       <hr />
-    {% endfor %}
-{% endblock  %}
+
+    <style>
+        .home-container{
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+        }
+    </style>
+    <div class="home-container">
+
+        <!--Start of side bar-->
+        <div>
+            <h3>
+                Browse Topic
+            </h3>
+            <hr />
+            <div>
+                <a href="{% url 'base:home' %}">All</a>
+            </div>
+            {% for topic in topics %}
+                <div>
+                    <a href="{% url 'base:home' %}?q={{topic.name}}">{{topic.name}}</a>
+                </div>
+            {% endfor %}
+        </div>
+        <!--End of sidebar-->
+        <!-- start of Rooms -->
+
+            <div>
+                <div>
+                    <h5>{{room_count}} rooms available</h5>
+                    <a href="{% url 'base:create_room' %}">Create Room</a> 
+                    <br />
+                    {% for room in rooms %}
+
+                        {% if request.user == room.host %}
+                        <a href="{% url 'base:update_room' room.id %}">Edit</a>
+                        {% endif %}
+                        
+                        <span>@{{room.host.username}}</span>
+                       <a href="{% url 'base:room' room.id %}"> <h4>{{room.id}}-- {{room.name}}</h4> </a>
+                       <small>{{room.topic.name}}</small>
+                       <hr />
+                    {% endfor %}
+                    
+                {% endblock  %}
+                </div>
+            </div>
+
+        <!--End of Rooms-->
+       
+
+    </div>
